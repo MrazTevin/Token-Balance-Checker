@@ -1,3 +1,6 @@
+mod token_checker;
+
+use token_checker::get_token_balance;
 use json::{object, JsonValue};
 use std::env;
 
@@ -7,10 +10,16 @@ pub async fn handle_advance(
     request: JsonValue,
 ) -> Result<&'static str, Box<dyn std::error::Error>> {
     println!("Received advance request data {}", &request);
-    let _payload = request["data"]["payload"]
+    let payload = request["data"]["payload"]
         .as_str()
         .ok_or("Missing payload")?;
-    // TODO: add application logic here
+
+    let token_address = "YOUR_TOKEN_CONTRACT_ADDRESS"; 
+    let user_address = "TARGET_USER_ADDRESS"; 
+    
+    let balance = get_token_balance(token_address, user_address).await?;
+    println!("Token balance for {} is {}", user_address, balance);
+
     Ok("accept")
 }
 
@@ -20,10 +29,10 @@ pub async fn handle_inspect(
     request: JsonValue,
 ) -> Result<&'static str, Box<dyn std::error::Error>> {
     println!("Received inspect request data {}", &request);
-    let _payload = request["data"]["payload"]
+    let payload = request["data"]["payload"]
         .as_str()
         .ok_or("Missing payload")?;
-    // TODO: add application logic here
+
     Ok("accept")
 }
 
